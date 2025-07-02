@@ -4,6 +4,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Farmafórmula - Farmácia de Manipulação</title>
+    
+    <!-- Favicon e ícones -->
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="48x48" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="assets/img/favicon.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="assets/img/favicon.png">
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    
+    <!-- Apple Touch Icons -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Farmafórmula">
+    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="assets/img/favicon.png">
+    <link rel="apple-touch-icon" sizes="57x57" href="assets/img/favicon.png">
+    
+    <!-- Microsoft Tiles -->
+    <meta name="msapplication-TileColor" content="#4CAF50">
+    <meta name="msapplication-TileImage" content="assets/img/favicon.png">
+    <meta name="msapplication-config" content="none">
+    
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
@@ -125,9 +159,65 @@
     </section>
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 Farmafórmula. Todos os direitos reservados.</p>
+            <p>&copy; 2024 Farmafórmula. Todos os direitos reservados. | 
+            <a href="politica-privacidade.html" style="color: #4CAF50; text-decoration: none;">Política de Privacidade</a></p>
         </div>
     </footer>
     <script src="js/slider.js"></script>
+    <script src="js/lgpd.js"></script>
+    <script>
+        // Registra o Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registrado: ', registration);
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW falhou: ', registrationError);
+                    });
+            });
+        }
+
+        // Prompt de instalação do PWA
+        let deferredPrompt;
+        const installButton = document.createElement('button');
+        installButton.textContent = 'Instalar App';
+        installButton.style.cssText = `
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 16px;
+            cursor: pointer;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: none;
+        `;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installButton.style.display = 'block';
+            document.body.appendChild(installButton);
+        });
+
+        installButton.addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('Usuário aceitou a instalação');
+                    }
+                    deferredPrompt = null;
+                    installButton.style.display = 'none';
+                });
+            }
+        });
+    </script>
 </body>
 </html> 
